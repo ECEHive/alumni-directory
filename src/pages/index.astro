@@ -1,11 +1,54 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import AlumniApp from "../components/AlumniApp";
+import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-	<Welcome />
+	<!-- Header -->
+	<header class="border-b border-gray-200 dark:border-white/10 bg-white/80 dark:bg-hive-dark/80 backdrop-blur-md sticky top-0 z-50">
+		<div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+			<div class="flex items-center">
+				<a href="/" aria-label="The Hive home">
+					<img src="/logo-light.svg" alt="The Hive Alumni" class="h-9 w-auto dark:hidden" />
+					<img src="/logo-dark.svg" alt="The Hive Alumni" class="h-9 w-auto hidden dark:block" />
+				</a>
+			</div>
+			<nav class="flex items-center gap-4">
+				<a href="https://hive.ece.gatech.edu/" target="_blank" rel="noopener noreferrer" class="text-xs text-gray-500 dark:text-white/50 hover:text-gt-gold dark:hover:text-gt-gold transition-colors">
+					Visit The Hive →
+				</a>
+			</nav>
+		</div>
+	</header>
+
+	<!-- Hero (always dark/navy — brand section) -->
+	<section class="bg-gt-navy">
+		<div class="max-w-7xl mx-auto px-6 py-20 text-center">
+			<h2 class="text-4xl md:text-6xl font-extrabold text-white mb-4 tracking-tight">
+				Hive Alumni Directory
+			</h2>
+			<p class="text-lg text-white/60 max-w-2xl mx-auto mb-8">
+				Explore where graduates of The Hive Makerspace at Georgia Tech have landed — 
+				from coast to coast, building the future.
+			</p>
+		</div>
+	</section>
+
+	<!-- Main Content -->
+	<main class="max-w-7xl mx-auto px-6 py-12">
+		<AlumniApp client:only="react" />
+	</main>
+
+	<!-- Footer -->
+	<footer class="border-t border-gray-200 dark:border-white/10 mt-12">
+		<div class="max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+			<div class="flex items-center">
+				<img src="/logo-light.svg" alt="The Hive Alumni" class="h-6 w-auto opacity-40 dark:hidden" />
+				<img src="/logo-dark.svg" alt="The Hive Alumni" class="h-6 w-auto opacity-40 hidden dark:block" />
+			</div>
+			<p class="text-xs text-gray-400 dark:text-white/30">
+				Georgia Institute of Technology &bull; Atlanta, GA
+			</p>
+		</div>
+	</footer>
 </Layout>

@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+	--color-gt-gold: #b3a369;
+	--color-gt-navy: #003057;
+	--color-gt-white: #ffffff;
+	--color-gt-gold-light: #d6c282;
+	--color-gt-navy-dark: #00203c;
+	--color-hive-yellow: #f5c518;
+	--color-hive-dark: #1a1a2e;
+	--color-hive-darker: #0f0f1e;
+	--color-hive-card: #16213e;
+	--color-hive-accent: #e2b842;
+}
+
+@layer base {
+	html {
+		color-scheme: light dark;
+	}
+
+	body {
+		font-family: "Inter", system-ui, -apple-system, sans-serif;
+	}
+}
