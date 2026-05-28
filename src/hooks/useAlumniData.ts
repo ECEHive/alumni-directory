@@ -3,21 +3,12 @@ import { decodeAlumni } from "../lib/alumni-codec";
 import { decryptAlumniData } from "../lib/alumni-crypto";
 import type { Alumni } from "../types/alumni";
 
-// Injected at build time by the alumni-encrypt integration.
-// Resolves to the plaintext key in dev (so no #key needed in the URL),
-// and to "" in production builds (key must come from the URL fragment).
-declare const __ALUMNI_DEV_KEY__: string;
-
 export type AlumniLoadError = "no-key" | "fetch-failed" | "decrypt-failed";
 
 function resolveKey(): string | null {
 	if (typeof window === "undefined") return null;
 	const hash = window.location.hash.slice(1);
-	if (hash) return hash;
-	if (typeof __ALUMNI_DEV_KEY__ !== "undefined" && __ALUMNI_DEV_KEY__) {
-		return __ALUMNI_DEV_KEY__;
-	}
-	return null;
+	return hash || null;
 }
 
 export function useAlumniData() {

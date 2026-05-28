@@ -9,6 +9,7 @@ import Layout from "../../layouts/Layout.astro";
 	>
 		<div class="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
 			<a
+				id="back-link"
 				href="/"
 				class="text-sm text-gray-500 dark:text-white/50 hover:text-gt-gold transition-colors"
 			>
@@ -30,3 +31,10 @@ import Layout from "../../layouts/Layout.astro";
 		<DataImportApp client:only="react" />
 	</main>
 </Layout>
+
+<script>
+	const link = document.getElementById("back-link") as HTMLAnchorElement;
+	if (link && window.location.hash) {
+		link.href = `/${window.location.hash}`;
+	}
+</script>

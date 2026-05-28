@@ -1,18 +1,12 @@
-import { Building2, ChevronLeft, Mail, MapPin, Search, X } from "lucide-react";
+import { Building2, ChevronLeft, Mail, MapPin, Phone, Search, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 function formatGradDate(date: string | undefined): string {
 	if (!date) return "";
-	const [year, month] = date.split("-");
-	if (!year) return date;
-	if (!month) return year;
-	return new Date(Number(year), Number(month) - 1).toLocaleString("en-US", {
-		month: "long",
-		year: "numeric",
-	});
+	return date.split("-")[0] || date;
 }
 
-import linkedinLogo from "../assets/linkedin-logo.png";
+import linkedinLogoWhite from "../assets/linkedin-logo-white.png";
 import { useAlumniData } from "../hooks/useAlumniData";
 import type { Alumni } from "../types/alumni";
 import AccessRestricted from "./AccessRestricted";
@@ -96,7 +90,7 @@ export default function MapApp() {
 			{/* Mobile top bar */}
 			<header className="md:hidden flex items-center gap-3 px-4 py-3 bg-white dark:bg-hive-dark border-b border-gray-200 dark:border-white/10 shrink-0 z-20">
 				<a
-					href="/"
+					href={`/${window.location.hash}`}
 					className="flex items-center gap-1 text-sm text-gray-500 dark:text-white/50 hover:text-gt-gold transition-colors shrink-0"
 				>
 					<ChevronLeft className="w-4 h-4" />
@@ -142,7 +136,7 @@ export default function MapApp() {
 					{/* Desktop header */}
 					<div className="hidden md:flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-white/5 shrink-0">
 						<a
-							href="/"
+							href={`/${window.location.hash}`}
 							className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-white/50 hover:text-gt-gold transition-colors"
 						>
 							<ChevronLeft className="w-4 h-4" />
@@ -150,12 +144,12 @@ export default function MapApp() {
 						</a>
 						<div className="flex items-center">
 							<img
-								src="/logo-light.svg"
+								src={`/logo-light.svg`}
 								alt="The Hive Alumni"
 								className="h-7 w-auto dark:hidden"
 							/>
 							<img
-								src="/logo-dark.svg"
+								src={`/logo-dark.svg`}
 								alt="The Hive Alumni"
 								className="h-7 w-auto hidden dark:block"
 							/>
@@ -417,6 +411,18 @@ function AlumniDialog({
 							</a>
 						</div>
 					)}
+
+					{alumni.phone && (
+						<div className="flex items-center gap-3">
+							<Phone className="w-4 h-4 text-gt-gold shrink-0" />
+							<a
+								href={`tel:${alumni.phone}`}
+								className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+							>
+								{alumni.phone}
+							</a>
+						</div>
+					)}
 				</div>
 
 				{/* Footer */}
@@ -429,7 +435,7 @@ function AlumniDialog({
 							className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-[#0A66C2] hover:bg-[#085db5] text-white text-sm font-semibold rounded-xl transition-colors"
 						>
 							<img
-								src={linkedinLogo.src}
+								src={linkedinLogoWhite.src}
 								alt="LinkedIn"
 								width={16}
 								height={16}

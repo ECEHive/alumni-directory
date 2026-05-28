@@ -26,13 +26,7 @@ import * as XLSX from "xlsx";
 
 function formatGradDate(date: string | undefined): string {
 	if (!date) return "";
-	const [year, month] = date.split("-");
-	if (!year) return date;
-	if (!month) return year;
-	return new Date(Number(year), Number(month) - 1).toLocaleString("en-US", {
-		month: "long",
-		year: "numeric",
-	});
+	return date.split("-")[0] || date;
 }
 
 import { encodeAlumni } from "../../lib/alumni-codec";
@@ -43,7 +37,7 @@ import type { Alumni } from "../../types/alumni";
 type Step = "upload" | "map" | "preview" | "output";
 
 interface RawRow {
-	[key: string]: string | number | boolean | null | undefined;
+	[key: string]: string | number | boolean | Date | null | undefined;
 }
 
 // All Alumni fields in display order
@@ -52,7 +46,7 @@ const ALUMNI_FIELDS: { key: keyof Alumni; label: string; required: boolean }[] =
 		{ key: "name", label: "Name", required: true },
 		{
 			key: "graduation_date",
-			label: "Graduation Date (YYYY-MM)",
+			label: "Graduation Year (YYYY)",
 			required: true,
 		},
 		{ key: "company", label: "Company", required: true },
@@ -140,11 +134,16 @@ function applyMapping(
 			const val = row[col];
 			if (val == null) return "";
 			if (val instanceof Date) {
+				if (key === "graduation_date") return String(val.getFullYear());
 				const y = val.getFullYear();
 				const m = String(val.getMonth() + 1).padStart(2, "0");
 				return `${y}-${m}`;
 			}
-			return String(val).trim();
+			const str = String(val).trim();
+			if (key === "graduation_date") {
+				return str.match(/^(\d{4})/)?.[1] ?? str;
+			}
+			return str;
 		};
 
 		const lat = Number.parseFloat(get("latitude"));

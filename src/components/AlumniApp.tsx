@@ -37,7 +37,7 @@ export default function AlumniApp() {
 					</h2>
 				</div>
 				<a
-					href="/map"
+					href={`/map${window.location.hash}`}
 					className="group flex items-center gap-4 p-5 bg-gt-navy rounded-2xl hover:ring-2 hover:ring-gt-gold/40 transition-all"
 				>
 					<div className="p-3 rounded-xl bg-gt-gold/20 shrink-0">

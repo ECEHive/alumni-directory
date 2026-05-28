@@ -8,7 +8,7 @@
  *
  * Field order (fixed, matches Alumni interface):
  *   0  name
- *   1  graduation_date
+ *   1  graduation_date  (4-digit year)
  *   2  company
  *   3  job_title
  *   4  city

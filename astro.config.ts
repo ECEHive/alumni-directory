@@ -8,6 +8,9 @@ import alumniEncrypt from "./src/integrations/alumni-encrypt.ts";
 
 // https://astro.build/config
 export default defineConfig({
+	site: import.meta.env.SITE,
+	base: "/",
+
 	vite: {
 		plugins: [tailwindcss()],
 	},

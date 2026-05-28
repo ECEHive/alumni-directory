@@ -2,10 +2,8 @@
  * Astro integration: alumni-encrypt
  *
  * Encrypts the ALUMNI_DATA blob at build time and serves it as /data/alumni.enc.
- * The blob is encrypted as-is (AES-GCM) — no CSV conversion.
  *
- * At dev time  → serves /data/alumni.enc from memory and injects
- *               __ALUMNI_DEV_KEY__ so devs don't need #key in the URL.
+ * At dev time  → serves /data/alumni.enc from memory via Vite middleware.
  * At build time → writes dist/data/alumni.enc
  *
  * Secret key:  ALUMNI_SECRET_KEY in .env
@@ -101,16 +99,6 @@ export default function alumniEncrypt(): AstroIntegration {
 
 				const vitePlugin: Plugin = {
 					name: "vite-alumni-encrypt",
-
-					config() {
-						return {
-							define: {
-								__ALUMNI_DEV_KEY__: JSON.stringify(
-									command === "dev" ? (secretKey ?? "") : "",
-								),
-							},
-						};
-					},
 
 					configureServer(server: ViteDevServer) {
 						server.middlewares.use(
