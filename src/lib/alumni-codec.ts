@@ -50,13 +50,20 @@ export function encodeAlumni(records: Alumni[]): string {
 		].join(US),
 	);
 	const packed = rows.join(RS);
-	return btoa(unescape(encodeURIComponent(packed)));
+	const bytes = new TextEncoder().encode(packed);
+	let binary = "";
+	for (let i = 0; i < bytes.length; i++) {
+		binary += String.fromCharCode(bytes[i]);
+	}
+	return btoa(binary);
 }
 
 // ─── Decode ──────────────────────────────────────────────────────────────────
 
 export function decodeAlumni(encoded: string): Alumni[] {
-	const packed = decodeURIComponent(escape(atob(encoded)));
+	const binary = atob(encoded);
+	const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+	const packed = new TextDecoder().decode(bytes);
 	if (!packed) return [];
 	return packed.split(RS).map((row) => {
 		const f = row.split(US);

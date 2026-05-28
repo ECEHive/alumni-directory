@@ -1,5 +1,5 @@
 import { Building2, ChevronLeft, Mail, MapPin, Search, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 function formatGradDate(date: string | undefined): string {
 	if (!date) return "";
@@ -26,6 +26,11 @@ export default function MapApp() {
 	const [selectedAlumni, setSelectedAlumni] = useState<Alumni | null>(null);
 	const [focusedAlumni, setFocusedAlumni] = useState<Alumni | null>(null);
 	const [mobileView, setMobileView] = useState<"map" | "list">("map");
+
+	const handleAlumniSelect = useCallback(
+		(a: Alumni) => setSelectedAlumni(a),
+		[],
+	);
 
 	const states = useMemo(() => {
 		const s = new Set(alumni.map((a) => a.state).filter(Boolean));
@@ -292,7 +297,7 @@ export default function MapApp() {
 				>
 					<AlumniMap
 						alumni={filtered}
-						onAlumniSelect={(a) => setSelectedAlumni(a)}
+						onAlumniSelect={handleAlumniSelect}
 						focusedAlumni={focusedAlumni}
 					/>
 				</main>

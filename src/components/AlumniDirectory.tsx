@@ -175,9 +175,11 @@ export default function AlumniDirectory({ alumni }: AlumniDirectoryProps) {
 						</tr>
 					</thead>
 					<tbody>
-						{filtered.map((a) => (
+						{filtered.map((a, i) => (
 							<tr
-								key={`${a.name}-${a.state}`}
+								key={
+									a.email || `${a.name}-${a.graduation_date}-${a.state}-${i}`
+								}
 								className="border-t border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
 							>
 								<td className="px-4 py-3">

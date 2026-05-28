@@ -39,8 +39,10 @@ export async function decryptAlumniData(
 ): Promise<string> {
 	const key = await deriveKey(passphrase);
 
-	// Decode base64url → bytes
-	const padded = encoded.replace(/-/g, "+").replace(/_/g, "/");
+	// Decode base64url → bytes (restore standard base64 with padding first)
+	const base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
+	const padding = base64.length % 4;
+	const padded = padding ? base64 + "=".repeat(4 - padding) : base64;
 	const binary = atob(padded);
 	const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
 

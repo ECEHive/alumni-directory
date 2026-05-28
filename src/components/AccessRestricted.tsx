@@ -12,7 +12,7 @@ const messages: Record<AlumniLoadError, { heading: string; body: string }> = {
 	},
 	"fetch-failed": {
 		heading: "Data Unavailable",
-		body: "Could load this website. Please try again or contact an administrator.",
+		body: "Could not load this website. Please try again or contact an administrator.",
 	},
 	"decrypt-failed": {
 		heading: "Invalid Access Link",
