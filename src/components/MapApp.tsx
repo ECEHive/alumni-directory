@@ -1,4 +1,4 @@
-import { Building2, ChevronLeft, Mail, MapPin, Phone, Search, X } from "lucide-react";
+import { Building2, ChevronLeft, Mail, MapPin, Search, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 function formatGradDate(date: string | undefined): string {
@@ -408,18 +408,6 @@ function AlumniDialog({
 								className="text-sm text-blue-600 dark:text-blue-400 hover:underline truncate"
 							>
 								{alumni.email}
-							</a>
-						</div>
-					)}
-
-					{alumni.phone && (
-						<div className="flex items-center gap-3">
-							<Phone className="w-4 h-4 text-gt-gold shrink-0" />
-							<a
-								href={`tel:${alumni.phone}`}
-								className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-							>
-								{alumni.phone}
 							</a>
 						</div>
 					)}

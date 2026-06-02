@@ -15,9 +15,8 @@
  *   5  state
  *   6  latitude   (4 decimal places)
  *   7  longitude  (4 decimal places)
- *   8  phone
- *   9  email
- *   10 linkedin
+ *   8  email
+ *   9  linkedin
  *
  * ASCII control chars \x1E/\x1F cannot appear in the data, so no escaping
  * is needed. The base64 encoding makes the result safe for .env files.
@@ -44,7 +43,6 @@ export function encodeAlumni(records: Alumni[]): string {
 			a.state ?? "",
 			a.latitude != null ? a.latitude.toFixed(4) : "",
 			a.longitude != null ? a.longitude.toFixed(4) : "",
-			a.phone ?? "",
 			a.email ?? "",
 			a.linkedin ?? "",
 		].join(US),
@@ -67,6 +65,7 @@ export function decodeAlumni(encoded: string): Alumni[] {
 	if (!packed) return [];
 	return packed.split(RS).map((row) => {
 		const f = row.split(US);
+		const hasLegacyFieldLayout = f.length >= 11;
 		return {
 			name: f[0] ?? "",
 			graduation_date: f[1] ?? "",
@@ -76,9 +75,8 @@ export function decodeAlumni(encoded: string): Alumni[] {
 			state: f[5] ?? "",
 			latitude: f[6] ? Number.parseFloat(f[6]) : 0,
 			longitude: f[7] ? Number.parseFloat(f[7]) : 0,
-			phone: f[8] ?? "",
-			email: f[9] ?? "",
-			linkedin: f[10] ?? "",
+			email: hasLegacyFieldLayout ? (f[9] ?? "") : (f[8] ?? ""),
+			linkedin: hasLegacyFieldLayout ? (f[10] ?? "") : (f[9] ?? ""),
 		};
 	});
 }

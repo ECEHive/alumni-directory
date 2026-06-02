@@ -7,7 +7,6 @@ export interface Alumni {
 	state: string;
 	latitude: number;
 	longitude: number;
-	phone: string;
 	email: string;
 	linkedin: string;
 }

@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUp, ArrowUpDown, Mail, Phone, Search } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Mail, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 
 function formatGradDate(date: string | undefined): string {
@@ -219,15 +219,6 @@ export default function AlumniDirectory({ alumni }: AlumniDirectoryProps) {
 												title="Email"
 											>
 												<Mail className="w-4 h-4" />
-											</a>
-										)}
-										{a.phone && (
-											<a
-												href={`tel:${a.phone}`}
-												className="text-gray-400 dark:text-white/40 hover:text-gt-gold transition-colors"
-												title="Phone"
-											>
-												<Phone className="w-4 h-4" />
 											</a>
 										)}
 									</div>

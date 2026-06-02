@@ -55,7 +55,6 @@ const ALUMNI_FIELDS: { key: keyof Alumni; label: string; required: boolean }[] =
 		{ key: "state", label: "State (abbr.)", required: true },
 		{ key: "latitude", label: "Latitude", required: true },
 		{ key: "longitude", label: "Longitude", required: true },
-		{ key: "phone", label: "Phone", required: false },
 		{ key: "email", label: "Email", required: false },
 		{ key: "linkedin", label: "LinkedIn handle", required: false },
 	];
@@ -76,7 +75,6 @@ const AUTO_MAP: Record<keyof Alumni, string[]> = {
 	state: ["state", "location state", "st"],
 	latitude: ["latitude", "lat"],
 	longitude: ["longitude", "lon", "lng", "long"],
-	phone: ["phone", "phone number", "mobile", "cell"],
 	email: ["email", "email address", "e-mail"],
 	linkedin: ["linkedin", "linkedin handle", "linkedin url"],
 };
@@ -164,7 +162,6 @@ function applyMapping(
 			state: get("state"),
 			latitude: Number.isNaN(lat) ? 0 : lat,
 			longitude: Number.isNaN(lng) ? 0 : lng,
-			phone: get("phone"),
 			email: get("email"),
 			linkedin: get("linkedin"),
 		};
@@ -581,9 +578,6 @@ export default function DataImportApp() {
 										</td>
 										<td className="px-3 py-2 text-gray-500 dark:text-white/60 font-mono">
 											{a.longitude}
-										</td>
-										<td className="px-3 py-2 text-gray-500 dark:text-white/60">
-											{a.phone}
 										</td>
 										<td className="px-3 py-2 text-gray-500 dark:text-white/60">
 											{a.email}
