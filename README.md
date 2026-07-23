@@ -1,6 +1,6 @@
 # Hive Alumni Directory
 
-A static, encrypted alumni directory for Georgia Tech's [Hive Makerspace](https://hive.gatech.edu).
+A static, encrypted alumni directory for Georgia Tech's [Hive Makerspace](https://hive.ece.gatech.edu).
 
 Alumni data is pulled from Airtable at build time, transformed, AES-GCM encrypted, and stored as a single `.enc` file. The decryption key is never sent to the server — it lives only in the URL fragment (`#your-key`).
 
