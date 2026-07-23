@@ -1,11 +1,19 @@
 import {
-	Building2,
-	GraduationCap,
+	Building2Icon,
+	GraduationCapIcon,
 	type LucideIcon,
-	MapPin,
-	Users,
+	MapPinIcon,
+	UsersIcon,
 } from "lucide-react";
 import { useMemo } from "react";
+import {
+	Card,
+	CardAction,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { locationGroup } from "../lib/location";
 import type { Alumni } from "../types/alumni";
 
 interface StatsBarProps {
@@ -14,7 +22,8 @@ interface StatsBarProps {
 
 export default function StatsBar({ alumni }: StatsBarProps) {
 	const stats = useMemo(() => {
-		const uniqueStates = new Set(alumni.map((a) => a.state).filter(Boolean));
+		// US states and countries, counted together ("Georgia", "Switzerland").
+		const uniqueRegions = new Set(alumni.map(locationGroup).filter(Boolean));
 		const uniqueCompanies = new Set(
 			alumni.map((a) => a.company).filter(Boolean),
 		);
@@ -26,7 +35,7 @@ export default function StatsBar({ alumni }: StatsBarProps) {
 
 		return {
 			totalAlumni: alumni.length,
-			states: uniqueStates.size,
+			regions: uniqueRegions.size,
 			companies: uniqueCompanies.size,
 			yearRange:
 				earliestYear && latestYear ? `${earliestYear}–${latestYear}` : "—",
@@ -34,33 +43,27 @@ export default function StatsBar({ alumni }: StatsBarProps) {
 	}, [alumni]);
 
 	const cards: { label: string; value: number | string; Icon: LucideIcon }[] = [
-		{ label: "Total Alumni", value: stats.totalAlumni, Icon: Users },
-		{ label: "States", value: stats.states, Icon: MapPin },
-		{ label: "Companies", value: stats.companies, Icon: Building2 },
-		{ label: "Class Years", value: stats.yearRange, Icon: GraduationCap },
+		{ label: "Total Alumni", value: stats.totalAlumni, Icon: UsersIcon },
+		{ label: "Locations", value: stats.regions, Icon: MapPinIcon },
+		{ label: "Companies", value: stats.companies, Icon: Building2Icon },
+		{ label: "Class Years", value: stats.yearRange, Icon: GraduationCapIcon },
 	];
 
 	return (
-		<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-			{cards.map((card) => (
-				<div
-					key={card.label}
-					className="bg-white dark:bg-hive-card border border-gray-200 dark:border-white/10 rounded-2xl p-5 hover:border-gt-gold/40 transition-all group"
-				>
-					<div className="flex items-center gap-3">
-						<div className="p-2 rounded-xl bg-gt-gold/10">
-							<card.Icon className="w-5 h-5 text-gt-gold" strokeWidth={1.75} />
-						</div>
-						<div>
-							<p className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-gt-gold transition-colors">
-								{card.value}
-							</p>
-							<p className="text-xs text-gray-500 dark:text-white/50 uppercase tracking-wider mt-0.5">
-								{card.label}
-							</p>
-						</div>
-					</div>
-				</div>
+		<div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+			{cards.map(({ label, value, Icon }) => (
+				<Card key={label} size="sm">
+					<CardHeader>
+						<CardDescription>{label}</CardDescription>
+						<CardTitle className="text-2xl tabular-nums">{value}</CardTitle>
+						<CardAction>
+							<Icon
+								className="size-4 text-muted-foreground"
+								aria-hidden="true"
+							/>
+						</CardAction>
+					</CardHeader>
+				</Card>
 			))}
 		</div>
 	);

@@ -38,6 +38,12 @@
 	},
 	"overrides": [
 		{
+			"includes": ["src/components/ui/**"],
+			"linter": {
+				"enabled": false
+			}
+		},
+		{
 			"includes": ["**/*.astro"],
 			"linter": {
 				"rules": {

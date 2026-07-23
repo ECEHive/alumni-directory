@@ -1,16 +1,132 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
 
-@theme {
-	--color-gt-gold: #b3a369;
-	--color-gt-navy: #003057;
-	--color-gt-white: #ffffff;
-	--color-gt-gold-light: #d6c282;
-	--color-gt-navy-dark: #00203c;
-	--color-hive-yellow: #f5c518;
-	--color-hive-dark: #1a1a2e;
-	--color-hive-darker: #0f0f1e;
-	--color-hive-card: #16213e;
-	--color-hive-accent: #e2b842;
+/* The site has no theme toggle — dark mode follows the system preference. */
+@custom-variant dark {
+	@media (prefers-color-scheme: dark) {
+		@slot;
+	}
+}
+
+@theme inline {
+	--font-heading: var(--font-sans);
+	--font-sans: "Inter Variable", sans-serif;
+	--color-sidebar-ring: var(--sidebar-ring);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+	--color-sidebar-primary: var(--sidebar-primary);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar: var(--sidebar);
+	--color-chart-5: var(--chart-5);
+	--color-chart-4: var(--chart-4);
+	--color-chart-3: var(--chart-3);
+	--color-chart-2: var(--chart-2);
+	--color-chart-1: var(--chart-1);
+	--color-ring: var(--ring);
+	--color-input: var(--input);
+	--color-border: var(--border);
+	--color-destructive: var(--destructive);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-accent: var(--accent);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-muted: var(--muted);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-secondary: var(--secondary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-primary: var(--primary);
+	--color-popover-foreground: var(--popover-foreground);
+	--color-popover: var(--popover);
+	--color-card-foreground: var(--card-foreground);
+	--color-card: var(--card);
+	--color-foreground: var(--foreground);
+	--color-background: var(--background);
+	--radius-sm: calc(var(--radius) * 0.6);
+	--radius-md: calc(var(--radius) * 0.8);
+	--radius-lg: var(--radius);
+	--radius-xl: calc(var(--radius) * 1.4);
+	--radius-2xl: calc(var(--radius) * 1.8);
+	--radius-3xl: calc(var(--radius) * 2.2);
+	--radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/*
+ * Georgia Tech brand mapped onto shadcn semantic tokens.
+ * Light: navy primary on cool near-white surfaces.
+ * Dark: gold primary on navy-derived surfaces.
+ */
+:root {
+	--background: oklch(0.984 0.003 248);
+	--foreground: oklch(0.21 0.04 251);
+	--card: oklch(1 0 0);
+	--card-foreground: oklch(0.21 0.04 251);
+	--popover: oklch(1 0 0);
+	--popover-foreground: oklch(0.21 0.04 251);
+	--primary: oklch(0.3037 0.0848 249.45);
+	--primary-foreground: oklch(0.984 0.003 248);
+	--secondary: oklch(0.955 0.008 248);
+	--secondary-foreground: oklch(0.3037 0.0848 249.45);
+	--muted: oklch(0.955 0.008 248);
+	--muted-foreground: oklch(0.5 0.025 251);
+	--accent: oklch(0.955 0.008 248);
+	--accent-foreground: oklch(0.3037 0.0848 249.45);
+	--destructive: oklch(0.577 0.245 27.325);
+	--border: oklch(0.91 0.01 248);
+	--input: oklch(0.91 0.01 248);
+	--ring: oklch(0.3037 0.0848 249.45);
+	--chart-1: oklch(0.7158 0.0791 94.51);
+	--chart-2: oklch(0.3037 0.0848 249.45);
+	--chart-3: oklch(0.55 0.09 250);
+	--chart-4: oklch(0.8162 0.0856 92.75);
+	--chart-5: oklch(0.65 0.06 250);
+	--radius: 0.625rem;
+	--sidebar: oklch(1 0 0);
+	--sidebar-foreground: oklch(0.21 0.04 251);
+	--sidebar-primary: oklch(0.3037 0.0848 249.45);
+	--sidebar-primary-foreground: oklch(0.984 0.003 248);
+	--sidebar-accent: oklch(0.955 0.008 248);
+	--sidebar-accent-foreground: oklch(0.3037 0.0848 249.45);
+	--sidebar-border: oklch(0.91 0.01 248);
+	--sidebar-ring: oklch(0.3037 0.0848 249.45);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--background: oklch(0.2049 0.0336 251.42);
+		--foreground: oklch(0.97 0.005 248);
+		--card: oklch(0.2386 0.0417 251.2);
+		--card-foreground: oklch(0.97 0.005 248);
+		--popover: oklch(0.2786 0.0497 250.03);
+		--popover-foreground: oklch(0.97 0.005 248);
+		--primary: oklch(0.7158 0.0791 94.51);
+		--primary-foreground: oklch(0.2049 0.0336 251.42);
+		--secondary: oklch(0.2786 0.0497 250.03);
+		--secondary-foreground: oklch(0.97 0.005 248);
+		--muted: oklch(0.2786 0.0497 250.03);
+		--muted-foreground: oklch(0.72 0.02 250);
+		--accent: oklch(0.2786 0.0497 250.03);
+		--accent-foreground: oklch(0.97 0.005 248);
+		--destructive: oklch(0.704 0.191 22.216);
+		--border: oklch(1 0 0 / 10%);
+		--input: oklch(1 0 0 / 15%);
+		--ring: oklch(0.7158 0.0791 94.51);
+		--chart-1: oklch(0.7158 0.0791 94.51);
+		--chart-2: oklch(0.65 0.06 250);
+		--chart-3: oklch(0.8162 0.0856 92.75);
+		--chart-4: oklch(0.55 0.09 250);
+		--chart-5: oklch(0.45 0.07 250);
+		--sidebar: oklch(0.2386 0.0417 251.2);
+		--sidebar-foreground: oklch(0.97 0.005 248);
+		--sidebar-primary: oklch(0.7158 0.0791 94.51);
+		--sidebar-primary-foreground: oklch(0.2049 0.0336 251.42);
+		--sidebar-accent: oklch(0.2786 0.0497 250.03);
+		--sidebar-accent-foreground: oklch(0.97 0.005 248);
+		--sidebar-border: oklch(1 0 0 / 10%);
+		--sidebar-ring: oklch(0.7158 0.0791 94.51);
+	}
 }
 
 @layer base {
@@ -18,7 +134,106 @@
 		color-scheme: light dark;
 	}
 
-	body {
-		font-family: "Inter", system-ui, -apple-system, sans-serif;
+	* {
+		@apply border-border outline-ring/50;
 	}
+
+	body {
+		@apply bg-background text-foreground font-sans;
+	}
+
+	button:not(:disabled),
+	[role="button"]:not(:disabled) {
+		cursor: pointer;
+	}
+}
+
+/* ---------- Leaflet map markers & popups (themed via semantic tokens) ---------- */
+
+/* Single alumnus: primary dot ringed by the page background */
+.alumni-marker-dot {
+	width: 14px;
+	height: 14px;
+	margin: 1px;
+	background: var(--color-primary);
+	border: 2.5px solid var(--color-background);
+	border-radius: 50%;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
+}
+
+/* Co-located alumni: primary badge with a count */
+.alumni-marker-cluster {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	background: var(--color-primary);
+	border: 2px solid var(--color-background);
+	border-radius: 50%;
+	color: var(--color-primary-foreground);
+	font-size: 11px;
+	font-weight: 700;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
+}
+
+/* Popup shell follows the app theme */
+.alumni-popup-wrapper .leaflet-popup-content-wrapper {
+	background: var(--color-popover);
+	color: var(--color-popover-foreground);
+	border-radius: var(--radius-lg);
+	box-shadow: 0 4px 16px rgb(0 0 0 / 0.25);
+}
+
+.alumni-popup-wrapper .leaflet-popup-tip {
+	background: var(--color-popover);
+}
+
+.alumni-popup-wrapper .leaflet-popup-content {
+	margin: 10px 12px;
+	font-family: var(--font-sans);
+}
+
+.alumni-popup-heading {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--color-muted-foreground);
+	margin: 0 0 6px;
+}
+
+.alumni-popup-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	max-height: 220px;
+	overflow-y: auto;
+}
+
+.alumni-popup-item {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 100%;
+	padding: 6px 8px;
+	border: 0;
+	border-radius: var(--radius-md);
+	background: transparent;
+	cursor: pointer;
+	text-align: left;
+	font: inherit;
+}
+
+.alumni-popup-item:hover {
+	background: var(--color-muted);
+}
+
+.alumni-popup-name {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--color-popover-foreground);
+}
+
+.alumni-popup-company {
+	font-size: 11px;
+	color: var(--color-muted-foreground);
 }

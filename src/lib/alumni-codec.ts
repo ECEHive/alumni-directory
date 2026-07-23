@@ -10,17 +10,20 @@
  *   0  name
  *   1  graduation_date  (4-digit year)
  *   2  company
- *   3  job_title
+ *   3  major
  *   4  city
- *   5  state
- *   6  latitude   (4 decimal places)
- *   7  longitude  (4 decimal places)
- *   8  email
- *   9  linkedin
+ *   5  region     (US state code, province, …)
+ *   6  country    (English country name)
+ *   7  latitude   (4 decimal places)
+ *   8  longitude  (4 decimal places)
+ *   9  email
+ *  10  linkedin
  *
  * ASCII control chars \x1E/\x1F cannot appear in the data, so no escaping
- * is needed. The base64 encoding makes the result safe for .env files.
+ * is needed.
  *
+ * The encoder runs at build time (fed from Airtable); the decoder runs in the
+ * browser. Both ship from the same build, so the format needs no versioning.
  * This module is intentionally dependency-free and runs in both Node and
  * the browser.
  */
@@ -38,9 +41,10 @@ export function encodeAlumni(records: Alumni[]): string {
 			a.name ?? "",
 			a.graduation_date ?? "",
 			a.company ?? "",
-			a.job_title ?? "",
+			a.major ?? "",
 			a.city ?? "",
-			a.state ?? "",
+			a.region ?? "",
+			a.country ?? "",
 			a.latitude != null ? a.latitude.toFixed(4) : "",
 			a.longitude != null ? a.longitude.toFixed(4) : "",
 			a.email ?? "",
@@ -65,18 +69,18 @@ export function decodeAlumni(encoded: string): Alumni[] {
 	if (!packed) return [];
 	return packed.split(RS).map((row) => {
 		const f = row.split(US);
-		const hasLegacyFieldLayout = f.length >= 11;
 		return {
 			name: f[0] ?? "",
 			graduation_date: f[1] ?? "",
 			company: f[2] ?? "",
-			job_title: f[3] ?? "",
+			major: f[3] ?? "",
 			city: f[4] ?? "",
-			state: f[5] ?? "",
-			latitude: f[6] ? Number.parseFloat(f[6]) : 0,
-			longitude: f[7] ? Number.parseFloat(f[7]) : 0,
-			email: hasLegacyFieldLayout ? (f[9] ?? "") : (f[8] ?? ""),
-			linkedin: hasLegacyFieldLayout ? (f[10] ?? "") : (f[9] ?? ""),
+			region: f[5] ?? "",
+			country: f[6] ?? "",
+			latitude: f[7] ? Number.parseFloat(f[7]) : 0,
+			longitude: f[8] ? Number.parseFloat(f[8]) : 0,
+			email: f[9] ?? "",
+			linkedin: f[10] ?? "",
 		};
 	});
 }

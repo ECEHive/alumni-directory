@@ -2,10 +2,24 @@
 import "../styles/global.css";
 
 interface Props {
+	/** Page name; rendered as "<title> | The Hive Alumni Network". */
 	title?: string;
+	description?: string;
+	/** Locks the page to the viewport (no scroll) for full-screen views like the map. */
+	fullscreen?: boolean;
 }
 
-const { title = "The Hive Alumni Network | Georgia Tech" } = Astro.props;
+const SITE_NAME = "The Hive Alumni Network";
+
+const {
+	title,
+	description = "Explore where alumni of The Hive Makerspace at Georgia Tech have landed across the United States.",
+	fullscreen = false,
+} = Astro.props;
+
+const pageTitle = title
+	? `${title} | ${SITE_NAME}`
+	: `${SITE_NAME} | Georgia Tech`;
 ---
 
 <!doctype html>
@@ -14,16 +28,27 @@ const { title = "The Hive Alumni Network | Georgia Tech" } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="Explore where alumni of The Hive Makerspace at Georgia Tech have landed across the United States." />
-		<title>{title}</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+		<meta name="description" content={description} />
+		<title>{pageTitle}</title>
+		{fullscreen && (
+			<style>
+				html,
+				body {
+					height: 100%;
+					margin: 0;
+					overflow: hidden;
+				}
+			</style>
+		)}
 	</head>
-	<body class="min-h-screen bg-gray-50 text-gray-900 dark:bg-hive-darker dark:text-white">
+	<body class:list={[fullscreen ? "h-screen overflow-hidden" : "min-h-screen"]}>
+		<a
+			href="#main"
+			class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:ring-1 focus:ring-foreground/10"
+		>
+			Skip to content
+		</a>
 		<slot />
 	</body>
 </html>

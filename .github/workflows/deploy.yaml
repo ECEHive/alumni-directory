@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    # Daily rebuild so the site stays in sync with Airtable.
+    - cron: "23 8 * * *"
   workflow_dispatch:
 
 permissions:
@@ -22,6 +25,17 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
 
+      # Geocode results live in the Actions cache, not the repo. The run_id key
+      # never matches exactly, so every run restores the newest geocode-cache-*
+      # entry and saves a fresh one afterwards (cache entries are immutable).
+      - name: Restore geocode cache
+        uses: actions/cache@v4
+        with:
+          path: data/geocode-cache.json
+          key: geocode-cache-${{ github.run_id }}
+          restore-keys: |
+            geocode-cache-
+
       - name: Install dependencies
         run: bun install
 
@@ -29,7 +43,7 @@ jobs:
         run: bun run build
         env:
           ALUMNI_SECRET_KEY: ${{ secrets.ALUMNI_SECRET_KEY }}
-          ALUMNI_DATA: ${{ secrets.ALUMNI_DATA }}
+          AIRTABLE_TOKEN: ${{ secrets.AIRTABLE_TOKEN }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

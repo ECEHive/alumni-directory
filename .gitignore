@@ -1,6 +1,9 @@
 # build output
 dist/
 
+# build-time caches (geocode results — persisted via actions/cache in CI)
+data/
+
 # generated types
 .astro/
 

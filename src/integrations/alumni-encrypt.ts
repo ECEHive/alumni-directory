@@ -1,12 +1,16 @@
 /**
  * Astro integration: alumni-encrypt
  *
- * Encrypts the ALUMNI_DATA blob at build time and serves it as /data/alumni.enc.
+ * Pulls alumni data from Airtable at build time, transforms it (consent
+ * gating, geocoding — see src/build/), encrypts it, and serves it as
+ * /data/alumni.enc.
  *
- * At dev time  → serves /data/alumni.enc from memory via Vite middleware.
- * At build time → writes dist/data/alumni.enc
+ * At dev time  → serves /data/alumni.enc from memory via Vite middleware
+ *                (Airtable is fetched once per dev-server run).
+ * At build time → writes dist/data/alumni.enc; the build FAILS if Airtable
+ *                is unreachable so a broken deploy never replaces a good one.
  *
- * Secret key:  ALUMNI_SECRET_KEY in .env
+ * Secrets:     AIRTABLE_TOKEN and ALUMNI_SECRET_KEY in the environment / .env
  * Wire format: base64url( IV[12 bytes] || AES-GCM ciphertext )
  */
 
@@ -14,9 +18,11 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { AstroIntegration } from "astro";
+import type { AstroIntegration, AstroIntegrationLogger } from "astro";
 import type { Plugin, ViteDevServer } from "vite";
 import { loadEnv } from "vite";
+import { loadAlumni } from "../build/alumni-source";
+import { encodeAlumni } from "../lib/alumni-codec";
 
 // --- Crypto helpers -----------------------------------------------------------
 
@@ -70,30 +76,50 @@ async function encrypt(plaintext: string, passphrase: string): Promise<string> {
 // --- Integration --------------------------------------------------------------
 
 export default function alumniEncrypt(): AstroIntegration {
+	let root = "";
 	let secretKey: string | undefined;
-	let alumniData: string | undefined;
+	let airtableToken: string | undefined;
+
+	/** Fetch + transform + encode, memoized for the dev server's lifetime. */
+	let blobPromise: Promise<string> | undefined;
+	function loadBlob(logger: AstroIntegrationLogger): Promise<string> {
+		if (!airtableToken) {
+			return Promise.reject(
+				new Error("[alumni-encrypt] AIRTABLE_TOKEN is not set."),
+			);
+		}
+		blobPromise ??= loadAlumni({
+			airtableToken,
+			geocodeCachePath: join(root, "data", "geocode-cache.json"),
+			logger: {
+				info: (m) => logger.info(m),
+				warn: (m) => logger.warn(m),
+			},
+		}).then(encodeAlumni);
+		return blobPromise;
+	}
 
 	return {
 		name: "alumni-encrypt",
 		hooks: {
 			"astro:config:setup": ({ config, command, updateConfig, logger }) => {
-				const root = fileURLToPath(config.root);
+				root = fileURLToPath(config.root);
 				const env = loadEnv(
 					command === "dev" ? "development" : "production",
 					root,
 					"",
 				);
 				secretKey = env.ALUMNI_SECRET_KEY || undefined;
-				alumniData = env.ALUMNI_DATA || undefined;
+				airtableToken = env.AIRTABLE_TOKEN || undefined;
 
 				if (!secretKey) {
 					logger.warn(
 						"[alumni-encrypt] ALUMNI_SECRET_KEY is not set — alumni data will not load.",
 					);
 				}
-				if (!alumniData) {
+				if (!airtableToken) {
 					logger.warn(
-						"[alumni-encrypt] ALUMNI_DATA is not set — no data to encrypt.",
+						"[alumni-encrypt] AIRTABLE_TOKEN is not set — cannot fetch alumni data.",
 					);
 				}
 
@@ -108,9 +134,12 @@ export default function alumniEncrypt(): AstroIntegration {
 								res: ServerResponse,
 								next: (err?: unknown) => void,
 							) => {
-								if (!secretKey || !alumniData) return next();
+								if (!secretKey || !airtableToken) return next();
 								try {
-									const encrypted = await encrypt(alumniData, secretKey);
+									const encrypted = await encrypt(
+										await loadBlob(logger),
+										secretKey,
+									);
 									res.setHeader("Content-Type", "text/plain; charset=utf-8");
 									res.setHeader("Cache-Control", "no-store");
 									res.end(encrypted);
@@ -126,16 +155,16 @@ export default function alumniEncrypt(): AstroIntegration {
 			},
 
 			"astro:build:done": async ({ dir, logger }) => {
-				if (!secretKey || !alumniData) {
-					logger.warn(
-						"[alumni-encrypt] Skipping — ALUMNI_SECRET_KEY or ALUMNI_DATA not set.",
+				if (!secretKey || !airtableToken) {
+					throw new Error(
+						"[alumni-encrypt] ALUMNI_SECRET_KEY and AIRTABLE_TOKEN must be set to build.",
 					);
-					return;
 				}
 
+				const blob = await loadBlob(logger);
 				const outDir = join(fileURLToPath(dir), "data");
 				mkdirSync(outDir, { recursive: true });
-				const encrypted = await encrypt(alumniData, secretKey);
+				const encrypted = await encrypt(blob, secretKey);
 				writeFileSync(join(outDir, "alumni.enc"), encrypted, "utf-8");
 				logger.info("[alumni-encrypt] alumni.enc written → dist/data/");
 			},
