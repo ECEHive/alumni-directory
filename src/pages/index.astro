@@ -1,6 +1,8 @@
 ---
+import { Image } from "astro:assets";
 import { badgeVariants } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import overview from "../assets/overview.png";
 import AlumniApp from "../components/AlumniApp";
 import Layout from "../layouts/Layout.astro";
 ---
@@ -27,17 +29,22 @@ import Layout from "../layouts/Layout.astro";
 	</header>
 
 	<!-- Hero -->
-	<section class="border-b bg-card">
-		<div class="mx-auto max-w-7xl px-6 py-14 text-center md:py-20">
-			<span class={badgeVariants({ variant: "secondary" })}>
-				The Hive Makerspace · Georgia Tech
-			</span>
+	<section class="relative overflow-hidden border-b bg-card">
+		<Image
+			src={overview}
+			alt=""
+			aria-hidden="true"
+			class="absolute inset-0 h-full w-full scale-105 object-cover blur-[2px]"
+			loading="eager"
+		/>
+		<div class="absolute inset-0 bg-background/75"></div>
+		<div class="relative mx-auto max-w-7xl px-6 py-14 text-center md:py-20">
 			<h1 class="font-heading mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
 				Hive Alumni Directory
 			</h1>
 			<p class="mx-auto mt-4 max-w-2xl text-base text-muted-foreground md:text-lg">
 				See where graduates of The Hive Makerspace at Georgia Tech have landed
-				across the country.
+				around the world.
 			</p>
 		</div>
 	</section>
